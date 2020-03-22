@@ -34,11 +34,31 @@ class ProfessorLogin extends Component {
         this.setState({showHide: {display: 'block'}})
     }
     
-    handleSubmit = e =>{
+    handleSubmit = async e =>{
         e.preventDefault()
-        
         const { loggedinUser, authToggle } = this.context
-        const userProfessor = professorLogin(this.state.email, this.state.key)
+
+        try {
+            console.log(this.state.email);
+            const response = await professorLogin(this.state.email, this.state.key)
+            const userProfessor = response.data;
+
+            if (response.status === 200) {
+                loggedinUser(userProfessor.school.name, userProfessor.school.id)
+                authToggle()
+                this.props.history.push('/professor-course')
+            }
+            else {
+                this.setState({message: 'Invalid email or password. Please try again.'})
+                this.showError()
+            }
+        }
+        catch (error) {
+            this.setState({message: 'Opps, something went wrong. Please try again.'})
+            this.showError()
+        }
+        // const { loggedinUser, authToggle } = this.context
+        // const userProfessor = professorLogin(this.state.email, this.state.key)
 
         //for test to connect DB, use code below-triggers Redirect to another page
         // if(userProfessor){
@@ -48,14 +68,14 @@ class ProfessorLogin extends Component {
         // }
 
         //error message TBD
-        if(userProfessor.status === 400){
-            this.setState({message: userProfessor.message})
-            this.showError()
-        }else{
-            loggedinUser(userProfessor.school.name, userProfessor.school.id)
-            authToggle()
-            this.props.history.push('/professor-course')
-        }
+        // if(userProfessor.status === 400){
+        //     this.setState({message: userProfessor.message})
+        //     this.showError()
+        // }else{
+        //     loggedinUser(userProfessor.school.name, userProfessor.school.id)
+        //     authToggle()
+        //     this.props.history.push('/professor-course')
+        // }
         return
         
     }

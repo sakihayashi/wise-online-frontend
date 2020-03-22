@@ -1,6 +1,6 @@
 const axios = require('axios');
-const baseURL = 'http://localhost:8000/';
-// const baseURL = 'https://wiseonlineattend.appspot.com/' // URL for hosted backend
+//const baseURL = 'http://localhost:8000/';
+const baseURL = 'https://wiseonlineattend.appspot.com/' // URL for hosted backend
 
 // return axios.get('/api/employees', { proxy: { host: '127.0.0.1', port: 1337 } }) .then(res => { }) .catch(err => console.log(err));
 
@@ -8,28 +8,26 @@ const backend = axios.create({
         baseURL,
         timeout: 5000,
         headers: {'X-Requested-With': 'XMLHttpRequest'},
-        withCredentials: true
+        withCredentials: true,
+        validateStatus: status => true,
 })
 /* ----------------------------------------
     Logins
 ------------------------------------------*/
 
 async function adminLogin(email, password) {
-    
     const response = await backend.post('admin/login', {email, password})
-    console.log('res: ', response);
-    
-    return response.data;
+    return response;
 }
 
 async function professorLogin(email, password) {
     const response = await backend.post('professor/login', {email, password});
-    return response.data;
+    return response;
 }
 
 async function studentLogin(email, studentId) {
     const response = await backend.post('student/login', {email, password : studentId});
-    return response.data;
+    return response;
 }
 
 /* ----------------------------------------
@@ -38,12 +36,12 @@ async function studentLogin(email, studentId) {
 
 async function createSchool(name, setupKey, email, password) {
     const response = await backend.post('admin/createSchool', {name, setupKey, email, password});
-    return response.data;
+    return response;
 }
 
 async function claimProfessorAccount(setupKey, email, password) {
     const response = await backend.post('professor/claimAccount', {setupKey, email, password});
-    return response.data;
+    return response;
 }
 
 /* ----------------------------------------
@@ -52,12 +50,12 @@ async function claimProfessorAccount(setupKey, email, password) {
 
 async function createCourse(classId, students) {
     const response = await backend.post('professor/createCourse', {classId, students});
-    return response.data;
+    return response;
 }
 
 async function startAttendance(courseId) {
     const response = await backend.post('professor/startAttendance', {courseId});
-    return response.data;
+    return response;
 }
 
 /* ----------------------------------------
@@ -66,7 +64,7 @@ async function startAttendance(courseId) {
 
 async function markAttendance(classId, keyCode) {
     const response = await backend.post('student/markAttendance', {classId, keyCode});
-    return response.data;
+    return response;
 }
 
 /* ----------------------------------------
@@ -75,12 +73,12 @@ async function markAttendance(classId, keyCode) {
 
 async function getCourses(school, professor) {
     const response = await backend.post('get/courses', {school, professor});
-    return response.data;
+    return response;
 }
 
 async function getStudents(school, professor, course) {
     const response = await backend.post('get/students', {school, professor, course});
-    return response.data;
+    return response;
 }
 
 export {

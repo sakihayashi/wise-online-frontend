@@ -36,12 +36,33 @@ class StudentLogin extends Component {
         this.setState({showHide: {display: 'block'}})
     }
     
-    handleSubmit = e =>{
+    handleSubmit = async e =>{
         e.preventDefault()
-        
         const { loggedinUser, authToggle } = this.context
+
+        try {
+            const response = await studentLogin(this.state.email, this.state.key)
+            const userStudent = response.data
+
+            if (response.status === 200) {
+                loggedinUser(userStudent.school.name, userStudent.school.id)
+                authToggle() //tihs triggers redirect to next page at HomePage.js
+                this.props.history.push('/student/dashboard')
+            }
+            else {
+                this.setState({message: 'Invalid email or student id. Please try again.'})
+                this.showError()
+            }
+
+        }
+        catch (error) {
+            this.setState({message: 'Opps, something went wrong. Please try again.'})
+            this.showError()
+        }
+        
+        // const { loggedinUser, authToggle } = this.context
         // const userAdmin = studentLogin({email: this.state.name, password: this.state.key});
-        const userStudent = studentLogin(this.state.email, this.state.key)
+        // const userStudent = studentLogin(this.state.email, this.state.key)
 
         //currently Promise pending due to DB connection 
 
@@ -53,14 +74,14 @@ class StudentLogin extends Component {
         // }
 
         // error message TBD
-        if(userStudent.status === 400){
-            this.setState({message: userStudent.message})
-            this.showError()
-        }else{
-            loggedinUser(userStudent.school.name, userStudent.school.id)
-            authToggle() //tihs triggers redirect to next page at HomePage.js
-            this.props.history.push('/student/dashboard')
-        }
+        // if(userStudent.status === 400){
+        //     this.setState({message: userStudent.message})
+        //     this.showError()
+        // }else{
+        //     loggedinUser(userStudent.school.name, userStudent.school.id)
+        //     authToggle() //tihs triggers redirect to next page at HomePage.js
+        //     this.props.history.push('/student/dashboard')
+        // }
         return
         
     }

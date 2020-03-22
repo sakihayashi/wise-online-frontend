@@ -44,26 +44,29 @@ class SchoolStep1 extends Component {
         this.setState({showHide: {display: 'block'}})
     }
     
-    handleSubmit = e =>{
+    handleSubmit = async e =>{
         e.preventDefault()
         const { getSchoolID, authToggle } = this.context
-        const newSchool = createSchool(this.state.name, this.state.setupkey, this.state.email, this.state.password)
 
-        //this object returns
-        // ctx.body = {
-        //     message: 'School created succesfully.',
-        //     id: school.id,
-        // }
+        try {
+            const response = await createSchool(this.state.name, this.state.setupkey, this.state.email, this.state.password)
+            const newSchool = response.data;
 
-        if(newSchool === 400){
-            this.setState({message: newSchool.message})
-            this.showError()
-            
-        }else{
-            getSchoolID(newSchool.id)
-            authToggle() 
-            this.props.history.push('/create-school')
+            if (response.status === 200) {
+                getSchoolID(newSchool.id)
+                authToggle() 
+                this.props.history.push('/create-school')
+            }
+            else {
+                this.setState({message: 'Sorry, we could not find a school with that setup key.'})
+                this.showError()
+            }
         }
+        catch (error) {
+            this.setState({message: 'Opps, something went wrong. Please try again.'})
+            this.showError()
+        }
+        
         return
     }
   render(){

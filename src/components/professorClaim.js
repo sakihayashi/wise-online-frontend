@@ -47,22 +47,33 @@ class ProfessorClaim extends Component {
         this.setState({showHide: {display: 'block'}})
     }
     
-    handleSubmit = e =>{
+    handleSubmit = async e =>{
         e.preventDefault()
         console.log('state: ', this.state);
         const { getProfessorID } = this.context
         if(this.state.email === this.state.conemail && this.state.password === this.state.conpassword){
-            
-            const newProfessorAccount = claimProfessorAccount(this.state.setupkey, this.state.email, this.state.password)
-            if(newProfessorAccount){
-                //obj below return
-                // ctx.body = {
-                //     message: 'Account claimed succesfully.',
-                //     id: professor.id,
-                // }
-                getProfessorID(newProfessorAccount.id)
-                this.props.history.push('/professor/course')
+            try {
+                const response = await claimProfessorAccount(this.state.setupkey, this.state.email, this.state.password)
+                const newProfessorAccount = response.data;
                 
+                if (response.status === 200) {
+                    if(newProfessorAccount){
+                        //obj below return
+                        // ctx.body = {
+                        //     message: 'Account claimed succesfully.',
+                        //     id: professor.id,
+                        // }
+                        getProfessorID(newProfessorAccount.id)
+                        this.props.history.push('/professor/course')
+                        
+                    }
+                }
+                else {
+                    // show error message here  : 'Could not claim a professor, invalid setup key.'
+                }
+            }
+            catch (error) {
+                // Show error message here : 'Ooops, something went wrong, please try again.'.
             }
         }
 
