@@ -30,6 +30,12 @@ async function studentLogin(email, studentId) {
     return response;
 }
 
+
+async function logout() {
+    const response = await backend.post('student/login', {});
+    return response;
+}
+
 /* ----------------------------------------
     Unprotected Routes
 ------------------------------------------*/
@@ -58,12 +64,28 @@ async function startAttendance(courseId) {
     return response;
 }
 
+async function startTest(courseId) {
+    const response = await backend.post('professor/startTest', {courseId});
+    return response;
+}
+
 /* ----------------------------------------
     Student Routes
 ------------------------------------------*/
 
 async function markAttendance(classId, keyCode) {
     const response = await backend.post('student/markAttendance', {classId, keyCode});
+    return response;
+}
+
+async function takeTest(classId, keyCode) {
+    const response = await backend.post('student/takeTest', {classId, keyCode});
+    return response;
+}
+
+// testAttendanceId will be returned as part of the response from takeTest()
+async function submitConfidenceScore(testAttendanceId, confidenceScore) {
+    const response = await backend.post('student/submitConfidenceScore', {testAttendanceId, confidenceScore});
     return response;
 }
 
@@ -85,11 +107,15 @@ export {
     adminLogin,
     professorLogin,
     studentLogin,
+    logout,
     createSchool,
     claimProfessorAccount,
     createCourse,
     startAttendance,
+    startTest,
     markAttendance,
+    takeTest,
+    submitConfidenceScore,
     getCourses,
     getStudents,
 }
