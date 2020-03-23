@@ -38,11 +38,13 @@ class AdminLogin extends Component {
         const { loggedinUser, authToggle, isAuthenticated } = this.context
 
         try {
-            const response = await adminLogin(this.state.email, this.state.key)
+            const emailLowerCase = this.state.email.toLowerCase()
+            
+            const response = await adminLogin(emailLowerCase, this.state.key)
             const userAdmin = response.data;
 
             if (response.status === 200) {
-                loggedinUser(userAdmin.school.name, userAdmin.school.id)
+                loggedinUser(userAdmin.id, userAdmin.school.name, userAdmin.school.id)
                 authToggle() 
                 this.props.history.push('/create-school')
                 console.log('userAdmin: ', userAdmin)

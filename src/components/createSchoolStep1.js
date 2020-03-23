@@ -46,16 +46,18 @@ class SchoolStep1 extends Component {
     
     handleSubmit = async e =>{
         e.preventDefault()
-        const { getSchoolID, authToggle } = this.context
+        const { loggedinUser, authToggle } = this.context
 
         try {
-            const response = await createSchool(this.state.name, this.state.setupkey, this.state.email, this.state.password)
-            const newSchool = response.data;
+            const emailLowerCase = this.state.email.toLowerCase()
+            const response = await createSchool(this.state.name, this.state.setupkey, emailLowerCase, this.state.password)
+            const newSchool = response.data
 
             if (response.status === 200) {
-                getSchoolID(newSchool.id)
+                
+                loggedinUser(newSchool.id, newSchool.school.name, newSchool.school.id)
                 authToggle() 
-                this.props.history.push('/create-school')
+                this.props.history.push('/set-up-school')
             }
             else {
                 this.setState({message: 'Sorry, we could not find a school with that setup key.'})
@@ -75,7 +77,7 @@ class SchoolStep1 extends Component {
             <div className="container">
                     <img src={editIcon} className="page-icon" alt="login icon"/>
                     <div className="spacer-vertical"></div>
-            <h1>Create Your Shool</h1>
+            <h1>Create Your School</h1>
 
             <form onSubmit={this.handleSubmit.bind(this)}>
                 <div className="spacer-vertical"></div>
@@ -99,7 +101,7 @@ class SchoolStep1 extends Component {
 
                 <div className="spacer-vertical"></div>
                 <div className="input-wrapper">
-                    <span className="input-label">School setupkey</span>
+                    <span className="input-label">School setup key</span>
                     <input type="text" name="setupkey" className="" value={this.state.setupkey} onChange={this.handleChangeKey.bind(this)}/>
                 </div>
  

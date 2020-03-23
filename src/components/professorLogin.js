@@ -39,14 +39,14 @@ class ProfessorLogin extends Component {
         const { loggedinUser, authToggle } = this.context
 
         try {
-            console.log(this.state.email);
-            const response = await professorLogin(this.state.email, this.state.key)
+            const emailLowerCase = this.state.email.toLowerCase()
+            const response = await professorLogin(emailLowerCase, this.state.key)
             const userProfessor = response.data;
 
             if (response.status === 200) {
-                loggedinUser(userProfessor.school.name, userProfessor.school.id)
+                loggedinUser(userProfessor.id, userProfessor.school.name, userProfessor.school.id)
                 authToggle()
-                this.props.history.push('/professor-course')
+                this.props.history.push('/professor/course')
             }
             else {
                 this.setState({message: 'Invalid email or password. Please try again.'})
@@ -88,7 +88,7 @@ class ProfessorLogin extends Component {
             <form onSubmit={this.handleSubmit.bind(this)}>
             <div className="spacer-vertical"></div>
                 <div className="input-wrapper">
-                    <div style={this.state.showHide}></div>
+                    <div style={this.state.showHide}>{this.state.message}</div>
                     <span className="input-label">Email</span>
                     <input type="email" className="" id="basic-url" aria-describedby="basic-addon3" value={this.state.email} onChange={this.handleChangeName.bind(this)}/>
                 </div>

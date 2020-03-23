@@ -32,7 +32,6 @@ class StudentLogin extends Component {
         this.setState({key: e.target.value})
     }
     showError = () =>{
-        // const displayStyle = {display: block}
         this.setState({showHide: {display: 'block'}})
     }
     
@@ -41,12 +40,21 @@ class StudentLogin extends Component {
         const { loggedinUser, authToggle } = this.context
 
         try {
-            const response = await studentLogin(this.state.email, this.state.key)
+            const emailLowerCase = this.state.email.toLowerCase()
+            const response = await studentLogin(emailLowerCase, this.state.key)
             const userStudent = response.data
 
+            // response 
+            // {message: "Logged In as Student with User ID: ", id: "5e7780e14251fe378c3d87aa", school: {…}}
+            // message: "Logged In as Student with User ID: "
+            // id: "5e7780e14251fe378c3d87aa"
+            // school: {id: "5e7780de4251fe378c3d8792", name: "UCSD"}
+            // __proto__: Object
+
             if (response.status === 200) {
-                loggedinUser(userStudent.school.name, userStudent.school.id)
-                authToggle() //tihs triggers redirect to next page at HomePage.js
+                // argument (name, id, schoolID)
+                loggedinUser(userStudent.id, userStudent.school.name, userStudent.school.id)
+                authToggle() 
                 this.props.history.push('/student/dashboard')
             }
             else {
@@ -103,7 +111,6 @@ class StudentLogin extends Component {
                 
                 <div className="spacer-vertical"></div>
                 <div className="input-wrapper">
-                    <div style={this.state.showHide}>{this.state.message}</div>
                     <span className="input-label">Student ID</span>
                     <input type="password" className="" onChange={this.handleChangeKey.bind(this)} value={this.state.key} />
                 </div>
