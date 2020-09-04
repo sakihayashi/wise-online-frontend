@@ -62,8 +62,7 @@ import ViewTestResults from '../components/professorTestResults';
 import ViewEachTestResult from '../components/professorViewTestData';
 import StudentRecordAgreeToTerms from '../components/studentRecordAgreeToTerms';
 import StudentInstallChromeExtension from '../components/studentInstallChromeExtension';
-import AdminTerms from '../components/adminTerms';
-// import AdminViewCourses from '../components/adminViewCourses';
+// import AdminTerms from '../components/adminTerms';
 
 class HomePage extends Component {
 static contextType = AuthContext
@@ -87,8 +86,6 @@ static contextType = AuthContext
                         <Route path="/admin/reset-password" component={AdminResetPW} />
                         <Route path="/admin/reset-success" component={AdminResetPWSuccess} />
                         <PrivateRouteAdmin path="/admin/set-up-success" component={SetupSchoolSuccess} />
-                        <PrivateRouteAdmin path="/admin/terms" component={AdminTerms} />
-                        {/* <PrivateRouteAdmin path="/admin/view-courses" component={AdminViewCourses} /> */}
                         <Route path="/admin-login" component={AdminLogin} />
 
                         {/* professor */}
